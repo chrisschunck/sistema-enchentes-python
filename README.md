@@ -1,1 +1,1 @@
-# projeto que fiz para uma sprint da faculdade
+# Projeto que fiz para uma sprint da faculdade
