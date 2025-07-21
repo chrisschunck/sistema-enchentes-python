@@ -1,0 +1,161 @@
+# Dados do sistema
+enchentes_registradas = []
+contatos_emergencia = {
+    "Defesa Civil": "199",
+    "Bombeiros": "193",
+    "Polícia Militar": "190",
+    "SAMU (Ambulância)": "192",
+}
+
+
+def mostrar_menu():
+    """Mostra o menu principal"""
+    print("\n=== SISTEMA DE MONITORAMENTO DE ENCHENTES ===")
+    print("1. Registrar nova enchente")
+    print("2. Visualizar enchentes registradas")
+    print("3. Ver informações de prevenção")
+    print("4. Contatos de emergência")
+    print("5. Estatísticas")
+    print("6. Sair")
+
+
+def registrar_enchente():
+    """Registra uma nova ocorrência de enchente"""
+    print("\n--- REGISTRAR NOVA ENCHENTE ---")
+
+    # Validação do local
+    while True:
+        local = input("Local da enchente (cidade/bairro): ").strip()
+        if local:
+            break
+        print("Por favor, informe o local!")
+
+    # Validação do nível
+    while True:
+        try:
+            nivel = int(input("Nível de gravidade (1 a 5): "))
+            if 1 <= nivel <= 5:
+                break
+            print("O nível deve ser entre 1 e 5!")
+        except:
+            print("Digite um número válido!")
+
+    # Adiciona ao registro
+    enchente = {
+        "local": local,
+        "nivel": nivel,
+        "data": input("Data (DD/MM/): ") or "Data não informada",
+        "detalhes": input("Detalhes adicionais (opcional): ") or "Sem detalhes adicionais"
+    }
+    enchentes_registradas.append(enchente)
+    print("\nRegistro salvo com sucesso!")
+
+
+def visualizar_enchentes():
+    """Mostra todas as enchentes registradas"""
+    print("\n--- ENCHENTES REGISTRADAS ---")
+
+    if not enchentes_registradas:
+        print("Nenhuma enchente registrada ainda.")
+        return
+
+    # Ordena do mais grave para o menos grave
+    for i, enchente in enumerate(sorted(enchentes_registradas, key=lambda x: x['nivel'], reverse=True), 1):
+        print(f"\nRegistro #{i}")
+        print(f"Local: {enchente['local']}")
+        print(f"Nível: {'★' * enchente['nivel']}")
+        print(f"Data: {enchente['data']}")
+        print(f"Detalhes: {enchente['detalhes']}")
+
+
+def mostrar_prevencao():
+    """Exibe dicas de prevenção"""
+    print("\n--- MEDIDAS DE PREVENÇÃO ---")
+    prevencoes = [
+        "1. Mantenha bueiros e esgotos desobstruídos",
+        "2. Não construa em áreas de risco",
+        "3. Guarde documentos importantes em locais altos e à prova d'água",
+        "4. Tenha um kit de emergência de alimentos, remédios",
+        "5. Conheça as rotas de fuga do seu bairro",
+        "6. Evite estacionar veículos em áreas alagáveis",
+        "7. Instale barreiras anti-enchente em portas e janelas se possível"
+    ]
+    for item in prevencoes:
+        print(item)
+    print("\nEm caso de alerta, procure áreas elevadas e siga as orientações da Defesa Civil!")
+
+
+def mostrar_contatos():
+    """Mostra contatos de emergência"""
+    print("\n--- CONTATOS DE EMERGÊNCIA ---")
+    print("Principais telefones para emergências:\n")
+    for servico, numero in contatos_emergencia.items():
+        print(f"{servico:<30}: {numero}")
+    print("\nLembre-se: Em caso de risco de vida, ligue imediatamente!")
+
+
+def mostrar_estatisticas():
+    """Exibe estatísticas básicas"""
+    print("\n--- ESTATÍSTICAS ---")
+
+    if not enchentes_registradas:
+        print("Nenhum dado disponível para análise.")
+        return
+
+    total = len(enchentes_registradas)
+    nivel_medio = sum(e['nivel'] for e in enchentes_registradas) / total
+
+    print(f"Total de registros: {total}")
+    print(f"Nível médio de gravidade: {nivel_medio:.1f}/5")
+
+    # Conta ocorrências por nível
+    print("\nDistribuição por gravidade:")
+    for nivel in range(1, 6):
+        quantidade = sum(
+            1 for e in enchentes_registradas if e['nivel'] == nivel)
+        print(
+            f"Nível {nivel}: {quantidade} ocorrências ({quantidade/total:.0%})")
+
+
+def main():
+    """Função principal do programa"""
+    print("Bem-vindo ao Sistema de Monitoramento de Enchentes: AquaSafe")
+
+    while True:
+        mostrar_menu()
+        opcao = input("\nEscolha uma opção (1 a 6):").strip()
+
+        if opcao == "1":
+            registrar_enchente()
+        elif opcao == "2":
+            visualizar_enchentes()
+        elif opcao == "3":
+            mostrar_prevencao()
+        elif opcao == "4":
+            mostrar_contatos()
+        elif opcao == "5":
+            mostrar_estatisticas()
+        elif opcao == "6":
+            print("Obrigado por usar nosso sistema! Mantenha-se seguro.")
+            break
+        else:
+            print("Opção inválida! Tente novamente.")
+
+
+if __name__ == "__main__":
+    # Adiciona alguns dados de exemplo para teste
+    enchentes_registradas = [
+        {
+            "local": "São Paulo - Centro",
+            "nivel": 3,
+            "data": "15/02/2023",
+            "detalhes": "Alagamento na Av. Paulista"
+        },
+        {
+            "local": "Rio de Janeiro - Tijuca",
+            "nivel": 4,
+            "data": "22/03/2023",
+            "detalhes": "Enchente com transbordamento de rio"
+        }
+    ]
+    main()
